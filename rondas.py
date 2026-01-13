@@ -119,9 +119,9 @@ def whatsapp_message(grupo, local, ronda_id, responsavel, status_ronda, descrica
     linhas = []
 
     if status_ronda == "SEM_ALTERACOES":
-        linhas.append("✅ *Rondas Realizadas, Sem Alterações!*")
+        linhas.append("✅ *Rondas Realizadas, Sem Alterações!* ✅")
     else:
-        linhas.append("⚠️ *Ronda Realizada, Com Ocorrências!*")
+        linhas.append("⚠️ *Ronda Realizada, Com Ocorrências!* ⚠️")
 
     linhas.append(f"📍 *Local:* {local} ({grupo})")
     linhas.append(f"🕒 *Data/Hora:* {now_str()}")
@@ -130,9 +130,6 @@ def whatsapp_message(grupo, local, ronda_id, responsavel, status_ronda, descrica
     if status_ronda == "COM_OCORRENCIAS" and descricao:
         linhas.append("")
         linhas.append(f"📝 *Ocorrências:* {descricao}")
-
-    if fotos_paths:
-        linhas.append(f"📷 *Fotos:* {len(fotos_paths)} (arquivadas no sistema)")
 
     return "\n".join(linhas)
 
