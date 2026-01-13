@@ -1,6 +1,5 @@
 streamlit
-pillow
-google-api-python-client
+Pillow
 google-auth
 google-auth-httplib2
-google-auth-oauthlib
+google-api-python-client
