@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image
 
+import os
 import base64
 import streamlit as st
 
@@ -19,11 +20,16 @@ import streamlit as st
 # Config
 # -----------------------
 APP_TITLE = "🛡️ MDC — Rondas"
-DATA_DIR = Path("data")
+BASE_DIR = Path(os.getenv("STREAMLIT_SERVER_HEADLESS", ""))  # só pra existir
+DATA_DIR = Path(os.getenv("MDC_DATA_DIR", ""))  # opcional via env
+if not str(DATA_DIR):
+    # Cloud/Linux: /tmp é ótimo; Windows: usa pasta local data/
+    DATA_DIR = Path("/tmp/mdc_rondas") if os.name != "nt" else Path("data")
+
 UPLOADS_DIR = DATA_DIR / "uploads"
 DB_PATH = DATA_DIR / "ronda.db"
 
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 st.set_page_config(page_title="MDC Ronda", layout="centered")
