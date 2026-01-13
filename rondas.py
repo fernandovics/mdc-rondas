@@ -192,21 +192,18 @@ if get_query_param("ok") == "1":
 
     st.markdown("Você já pode fechar essa aba 👍")
 
-    st.components.v1.html(
-        """
-        <script>
-          function tryClose(){
-            window.open('', '_self');
-            window.close();
-          }
-        </script>
-        <button style="font-size:18px;padding:12px 18px;border-radius:12px;cursor:pointer;"
-                onclick="tryClose()">
-          Fechar
-        </button>
-        """,
-        height=90
-    )
+    c1, c2 = st.columns(2)
+
+    with c1:
+        if st.button("🔁 Nova ronda", use_container_width=True):
+            st.session_state.pop("last_whatsapp_msg", None)
+            st.query_params.pop("ok", None)
+            st.rerun()
+
+    with c2:
+        if st.button("🔄 Recarregar página", use_container_width=True):
+            st.query_params["t"] = datetime.now().strftime("%H%M%S")
+            st.rerun()
 
     st.stop()
 
