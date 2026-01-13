@@ -1,0 +1,9 @@
+﻿Grupo,Local,LocalSlug,GrupoSlug,qr_id,qr_url,file
+ADM,Portaria,portaria,adm,adm__portaria,https://SEU_APP_QR.streamlit.app/?ronda=adm__portaria,adm__portaria.png
+ADM,Cozinha,cozinha,adm,adm__cozinha,https://SEU_APP_QR.streamlit.app/?ronda=adm__cozinha,adm__cozinha.png
+ADM,Alojamento,alojamento,adm,adm__alojamento,https://SEU_APP_QR.streamlit.app/?ronda=adm__alojamento,adm__alojamento.png
+ADM,Administrativo,administrativo,adm,adm__administrativo,https://SEU_APP_QR.streamlit.app/?ronda=adm__administrativo,adm__administrativo.png
+Operção,Resumo,resumo,opercao,opercao__resumo,https://SEU_APP_QR.streamlit.app/?ronda=opercao__resumo,opercao__resumo.png
+Operção,Linha,linha,opercao,opercao__linha,https://SEU_APP_QR.streamlit.app/?ronda=opercao__linha,opercao__linha.png
+Operção,Cava,cava,opercao,opercao__cava,https://SEU_APP_QR.streamlit.app/?ronda=opercao__cava,opercao__cava.png
+Operção,Bota-Fora (?),bota-fora,opercao,opercao__bota-fora,https://SEU_APP_QR.streamlit.app/?ronda=opercao__bota-fora,opercao__bota-fora.png
