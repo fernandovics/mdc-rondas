@@ -256,10 +256,3 @@ msg = whatsapp_message(
 
 st.markdown("### 📲 Mensagem para WhatsApp")
 st.text_area("Copiar e colar", value=msg, height=240)
-
-if fotos_paths:
-    with st.expander("📷 Arquivos armazenados (paths internos)"):
-        for p in fotos_paths:
-            st.code(p)
-
-st.caption("As fotos ficam armazenadas internamente no sistema (não públicas).")
