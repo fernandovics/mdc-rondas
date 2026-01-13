@@ -5,6 +5,7 @@
 import re
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 import streamlit as st
 from PIL import Image
@@ -15,7 +16,7 @@ from supabase import create_client
 # Config / UI
 # -----------------------
 APP_TITLE = "Rondas de Segurança"
-APP_VERSION = "2026-01-13_02"
+APP_VERSION = "2026-01-13_03"
 
 st.set_page_config(page_title=APP_TITLE, layout="centered")
 st.caption(f"versão: {APP_VERSION}")
@@ -63,6 +64,10 @@ def get_query_param(key: str):
     if isinstance(val, list):
         return val[0] if val else None
     return val
+
+
+def whatsapp_link(text: str) -> str:
+    return f"https://wa.me/?text={quote(text)}"
 
 
 def upload_photos_to_storage(ronda_id: str, files):
@@ -128,8 +133,10 @@ def whatsapp_message(grupo, local, ronda_id, responsavel, status_ronda, descrica
     linhas.append(f"👤 *Responsável:* {responsavel}")
 
     if status_ronda == "COM_OCORRENCIAS" and descricao:
-        linhas.append("")
         linhas.append(f"📝 *Ocorrências:* {descricao}")
+
+    if fotos_paths:
+        linhas.append(f"📷 *Fotos:* {len(fotos_paths)} (arquivadas no sistema)")
 
     return "\n".join(linhas)
 
@@ -170,6 +177,40 @@ local = cfg["local"]
 st.markdown(f"### 📍 {local}")
 st.caption(f"Grupo: {grupo} • ID: `{ronda_id}` • {now_str()}")
 
+
+# -----------------------
+# Tela final (OK) — B + A
+# -----------------------
+if get_query_param("ok") == "1":
+    st.success("✅ Ronda registrada com sucesso!")
+
+    msg = st.session_state.get("last_whatsapp_msg", "")
+    if msg:
+        st.markdown("### 📲 Mensagem para WhatsApp")
+        st.text_area("Copiar e colar", value=msg, height=220)
+        st.link_button("Abrir WhatsApp", whatsapp_link(msg))
+
+    st.markdown("Você já pode fechar essa aba 👍")
+
+    st.components.v1.html(
+        """
+        <script>
+          function tryClose(){
+            window.open('', '_self');
+            window.close();
+          }
+        </script>
+        <button style="font-size:18px;padding:12px 18px;border-radius:12px;cursor:pointer;"
+                onclick="tryClose()">
+          Fechar
+        </button>
+        """,
+        height=90
+    )
+
+    st.stop()
+
+
 # -----------------------
 # Form
 # -----------------------
@@ -202,6 +243,7 @@ with st.form("ronda_form"):
 if not submitted:
     st.stop()
 
+
 # -----------------------
 # Validações
 # -----------------------
@@ -224,8 +266,9 @@ payload = {
     "descricao_ocorrencias": descricao_ocorrencias.strip(),
 }
 
+
 # -----------------------
-# Persistência (Supabase)
+# Persistência (Supabase) + Redirect (B)
 # -----------------------
 try:
     with st.spinner("Salvando..."):
@@ -236,11 +279,7 @@ except Exception as e:
     st.exception(e)
     st.stop()
 
-st.success("✅ Ronda registrada com sucesso!")
-
-# -----------------------
-# WhatsApp
-# -----------------------
+# monta msg, salva em session_state, seta ok=1 e rerun (vai pra tela final)
 msg = whatsapp_message(
     grupo,
     local,
@@ -251,5 +290,6 @@ msg = whatsapp_message(
     fotos_paths
 )
 
-st.markdown("### 📲 Mensagem para WhatsApp")
-st.text_area("Copiar e colar", value=msg, height=240)
+st.session_state["last_whatsapp_msg"] = msg
+st.query_params["ok"] = "1"
+st.rerun()
